@@ -5,7 +5,7 @@ export const authConfig = {
     signIn: '/login',
   },
   callbacks: {
-    authorized({ auth, request: { nextUrl } }) {
+    authorized({ request: { nextUrl }, auth }) {
       const isLoggedIn = !!auth?.user;
       const isOnDashboard = nextUrl.pathname.startsWith('/dashboard');
       if (isOnDashboard) {
@@ -15,6 +15,18 @@ export const authConfig = {
         return Response.redirect(new URL('/dashboard', nextUrl));
       }
       return true;
+    },
+    async jwt({ token, user, account, profile, isNewUser }) {
+      if(user?.role) {
+        token.role = user.role;
+      }
+      return token
+    },
+    async session({ session, token }) {
+      if(token?.role) {
+        session.user.role = token.role;
+      }
+      return session;
     },
   },
   providers: [], // Add providers with an empty array for now

@@ -5,7 +5,7 @@ import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-import { signIn } from '@/auth';
+import { signIn, auth } from '@/auth';
 import { AuthError } from 'next-auth';
 
 export type State = {
@@ -83,7 +83,9 @@ export async function authenticate(
   }
 }
  
-export async function updateInvoice(id: string, formData: FormData) {
+export async function updateInvoice(invoiceId: string, prevState: State, formData: FormData) {
+  const { user: { role } } = await auth()
+  console.log("role:\t", role)
   const validatedFields = UpdateInvoice.safeParse({
     customerId: formData.get('customerId'),
     amount: formData.get('amount'),
@@ -104,7 +106,7 @@ export async function updateInvoice(id: string, formData: FormData) {
     await sql`
       UPDATE invoices
       SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
-      WHERE id = ${id}
+      WHERE id = ${invoiceId}
     `;
   } catch(error) {
     return { message: 'Server action Error: Failed to update invoice.' }
@@ -114,7 +116,6 @@ export async function updateInvoice(id: string, formData: FormData) {
 }
 
 export async function deleteInvoice(id: string) {
-  throw new Error('Failed to Delete Invoice');
   try {
     await sql`DELETE FROM invoices WHERE id = ${id}`;
     revalidatePath('/dashboard/invoices');
