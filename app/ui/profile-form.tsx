@@ -11,12 +11,12 @@ import {
 import { ArrowRightIcon } from '@heroicons/react/20/solid';
 import { Button } from '@/app/ui/button';
 import { useFormState, useFormStatus } from 'react-dom';
-import { updateUser } from '@/app/lib/actions';
+import { modifyUser } from '@/app/lib/actions';
 
 import { useState, useEffect } from 'react';
  
 export default function ProfileForm({user}) {
-  const [errorMessage, dispatch] = useFormState(updateUser, undefined);
+  const [errorMessage, dispatch] = useFormState(modifyUser, undefined);
 
   return (
     <form action={dispatch} className="space-y-3">
@@ -106,7 +106,7 @@ export default function ProfileForm({user}) {
             </div>
           </div>
         </div>
-        <LoginButton />
+        <SubmitButton />
         <div
           className="flex h-8 items-end space-x-1"
           aria-live="polite"
@@ -124,7 +124,7 @@ export default function ProfileForm({user}) {
   );
 }
  
-function LoginButton() {
+function SubmitButton() {
   const { pending } = useFormStatus();
  
   return (

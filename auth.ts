@@ -5,7 +5,13 @@ import { z } from 'zod';
 import bcrypt from 'bcrypt';
 import { getUser } from '@/app/lib/data'
  
-export const { auth, signIn, signOut, updateUser } = NextAuth({
+export const {
+  auth,
+  signIn,
+  signOut,
+  // the "updateUser" is not among entities returning from the NextAuth(...)
+  // updateUser
+} = NextAuth({
   ...authConfig,
   providers: [
     CredentialsProvider({

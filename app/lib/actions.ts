@@ -6,7 +6,12 @@ import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-import { signIn, auth, updateUser } from '@/auth';
+import {
+  signIn,
+  auth,
+  // the "updateUser" cannot be imported because it is not among entities returning from the NextAuth(...)
+  // updateUser
+} from '@/auth';
 import { AuthError } from 'next-auth';
 
 import { User } from './definitions';
@@ -88,7 +93,8 @@ export async function authenticate(
 
 export const modifyUser = async(prevState: string | undefined, formData: FormData) => {
   try {
-    await updateUser('credentials', formData);
+    // the "updateUser" cannot be used here because it is not among entities returning from the NextAuth(...)
+    // await updateUser('credentials', formData);
   } catch (error) {
     console.error('Error updating user:', error);
     throw error;
@@ -136,18 +142,3 @@ export async function deleteInvoice(id: string) {
     return { message: 'Server action Error: Failed to delete invoice.' }
   }
 }
-
-// export const updateUser = async({ id, name, email, role, password }: User) => {
-//   try {
-//     const hashedPassword = await bcrypt.hash(password, 10);
-//     await sql`
-//       UPDATE users
-//       SET name = ${name}, email = ${email}, password = ${hashedPassword}, role = ${role}
-//       WHERE id = ${id};
-//     `;
-//     console.log('User updated');
-//   } catch (error) {
-//     console.error('Error updating user:', error);
-//     throw error;
-//   }
-// }
