@@ -1,12 +1,15 @@
 'use server';
 
 import { z } from 'zod';
+import bcrypt from 'bcrypt';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-import { signIn, auth } from '@/auth';
+import { signIn, auth, updateUser } from '@/auth';
 import { AuthError } from 'next-auth';
+
+import { User } from './definitions';
 
 export type State = {
   errors?: {
@@ -82,6 +85,15 @@ export async function authenticate(
     throw error;
   }
 }
+
+export const modifyUser = async(prevState: string | undefined, formData: FormData) => {
+  try {
+    await updateUser('credentials', formData);
+  } catch (error) {
+    console.error('Error updating user:', error);
+    throw error;
+  }
+}
  
 export async function updateInvoice(invoiceId: string, prevState: State, formData: FormData) {
   const { user: { role } } = await auth()
@@ -124,3 +136,18 @@ export async function deleteInvoice(id: string) {
     return { message: 'Server action Error: Failed to delete invoice.' }
   }
 }
+
+// export const updateUser = async({ id, name, email, role, password }: User) => {
+//   try {
+//     const hashedPassword = await bcrypt.hash(password, 10);
+//     await sql`
+//       UPDATE users
+//       SET name = ${name}, email = ${email}, password = ${hashedPassword}, role = ${role}
+//       WHERE id = ${id};
+//     `;
+//     console.log('User updated');
+//   } catch (error) {
+//     console.error('Error updating user:', error);
+//     throw error;
+//   }
+// }
