@@ -8,9 +8,7 @@ import { redirect } from 'next/navigation';
 
 import {
   signIn,
-  auth,
-  // the "updateUser" cannot be imported because it is not among entities returning from the NextAuth(...)
-  // updateUser
+  auth
 } from '@/auth';
 import { AuthError } from 'next-auth';
 
@@ -93,8 +91,7 @@ export async function authenticate(
 
 export const modifyUser = async(prevState: string | undefined, formData: FormData) => {
   try {
-    // the "updateUser" cannot be used here because it is not among entities returning from the NextAuth(...)
-    // await updateUser('credentials', formData);
+    //
   } catch (error) {
     console.error('Error updating user:', error);
     throw error;

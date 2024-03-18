@@ -10,8 +10,7 @@ import { RevenueChartSkeleton, LatestInvoicesSkeleton, CardsSkeleton } from '@/a
 import { auth } from '@/auth';
 
 export default async function Page() {
-  const authResult = await auth();
-  const { user } = authResult
+  const { user } = await auth();
   return (
     <main>
       <Link

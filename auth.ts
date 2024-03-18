@@ -8,9 +8,7 @@ import { getUser } from '@/app/lib/data'
 export const {
   auth,
   signIn,
-  signOut,
-  // the "updateUser" is not among entities returning from the NextAuth(...)
-  // updateUser
+  signOut
 } = NextAuth({
   ...authConfig,
   providers: [
